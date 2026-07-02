@@ -1,16 +1,17 @@
 # Node AI API Starter
 
+An AI Backend Starter built with Hono + TypeScript + DeepSeek.
+
 ## Features
 
-- Hono
-- REST API
-- Zod Validation
-- API Key Authentication
-- Request Logger
-- Global Error Handler
-- Resume Parser
-- JD Parser
-- DeepSeek Integration
+- ✅ Hono REST API
+- ✅ Zod Validation
+- ✅ API Key Authentication
+- ✅ Global Error Handler
+- ✅ Request Logger
+- ✅ Resume Parser
+- ✅ JD Parser
+- ✅ DeepSeek Integration
 
 ## Tech Stack
 
@@ -21,15 +22,29 @@
 - pdf-parse
 - pnpm
 
-## Run
+## Quick Start
 
 ```bash
 pnpm install
+
+cp .env.example .env
+
 pnpm dev
 ```
-open http://localhost:3000
-```
-```
-错误码： 
 
-```
+## API
+
+| Method | API |
+| ------- | ---- |
+| GET | /health |
+| POST | /chat |
+| POST | /parse-resume |
+| POST | /extract-jd |
+
+## Roadmap
+
+- ✅ Resume Parser
+- ✅ JD Parser
+- 🚧 Match Score
+- 🚧 Resume Rewrite
+- 🚧 Cover Letter
