@@ -33,7 +33,8 @@ dist/
 # uploads
 uploads/
 
-# test-files/
+# test-files
+test-files/
 
 # history
 .history/
