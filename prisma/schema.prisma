@@ -11,3 +11,19 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model Resume {
+
+  id           String   @id @default(cuid())
+
+  filename     String
+
+  originalText String
+
+  parsedJson   Json
+
+  createdAt    DateTime @default(now())
+
+  updatedAt    DateTime @updatedAt
+
+}
