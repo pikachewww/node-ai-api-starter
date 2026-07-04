@@ -1,13 +1,14 @@
 import { Hono } from "hono";
 import { aiClient } from "../utils/ai.js";
 import { success, fail } from "../utils/response.js";
-import { z } from "zod"
-
+import { jdSchema } from "../schema/jd.js"
+import { aiService } from "../service/ai.service.js";
+import { jdPrompt } from "../prompt/jd.prompt.js";
+import { parseJson } from "../utils/json.js";
+//  只负责
+// 接收请求 参数校验 调用service 返回响应
 export const jdRoute = new Hono();
 // 岗位jd(职责)
-const jdSchema = z.object({
-  jd: z.string().min(20, "JD 内容太短")
-})
 jdRoute.post("/extract-jd", async (c) => {
   // 上传职责pdf 读取文本 传给ai 让它提取岗位要求 返回结构数据
   const body = await c.req.json();
@@ -17,47 +18,10 @@ jdRoute.post("/extract-jd", async (c) => {
   }
   console.log(body);
 
-  const completion = await aiClient.chat.completions.create({
-    model: process.env.MODEL || "deepseek-chat",
-    messages: [
-      {
-        role: "system",
-        content: `
-            你是一个专业的jd解析助手。
-            请从用户提供的岗位描述中提取结构化信息。
-            只返回 JSON，不要返回 Markdown，不要解释。
-            JSON 格式如下：
-            {
-                "title": "",
-
-                "requiredSkills": [],
-
-                "preferredSkills": [],
-
-                "responsibilities": [],
-
-                "experienceLevel": "",
-
-                "keywords": []
-                          }
-            `,
-      },
-      {
-        role: "user",
-        content: result.data.jd,
-      },
-    ],
-  });
-
-  const raw = completion.choices[0]?.message?.content || "";
-
-  let resume;
-
-  try {
-    resume = JSON.parse(raw);
-  } catch {
-    return fail(c, "AI 返回的不是合法 JSON", 5001);
-  }
+  const system = jdPrompt
+  const user = result.data.jd
+  const raw = await aiService.chat( system, user)
+  const resume = parseJson(raw)
 
   return success(c, resume);
 });

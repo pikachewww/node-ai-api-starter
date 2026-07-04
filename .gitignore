@@ -38,3 +38,7 @@ dist/
 
 # history
 .history/
+
+# prompt
+prompt/
+/src/generated/prisma

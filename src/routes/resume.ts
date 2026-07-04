@@ -1,8 +1,10 @@
 import { Hono } from "hono";
 import fs from "node:fs/promises";
 import { parsePdf } from "../utils/pdf.js";
-import { aiClient } from "../utils/ai.js";
 import { success, fail } from "../utils/response.js";
+import { aiService } from "../service/ai.service.js";
+import { resumePrompt } from "../prompt/resume.prompt.js";
+import { parseJson } from "../utils/json.js";
 
 export const resumeRoute = new Hono();
 //  解析简历
@@ -37,54 +39,11 @@ resumeRoute.post("/parse-resume", async (c) => {
     return fail(c, "PDF 未解析出有效文本", 2001);
   }
 
-  const completion = await aiClient.chat.completions.create({
-    model: process.env.MODEL || "deepseek-chat",
-    messages: [
-      {
-        role: "system",
-        content: `
-            你是一个专业的简历解析助手。
-            请从用户提供的简历文本中提取结构化信息。
-            只返回 JSON，不要返回 Markdown，不要解释。
-            JSON 格式如下：
-            {
-                "name": "",
-                "phone": "",
-                "email": "",
-                "skills": [],
-                "education": [],
-                "workExperience": [],
-                "projects": [],
-                "summary": ""
-            }
-            `,
-      },
-      {
-        role: "user",
-        content: text,
-      },
-    ],
-  });
-
-  const raw = completion.choices[0]?.message?.content || "";
-
-  let resume;
-
-  try {
-    resume = JSON.parse(raw);
-  } catch {
-    return fail(c, "AI 返回的不是合法 JSON", 5001);
-  }
+  const system = resumePrompt;
+  const user = text;
+  const raw = await aiService.chat(system, user);
+  
+  const resume = parseJson(raw);
 
   return success(c, resume);
-
-  //   return c.json({
-  //     success: true,
-  //     data: {
-  //       filename: file.name,
-  //       size: file.size,
-  //       type: file.type,
-  //       text: text.slice(0, 1000),
-  //     },
-  //   });
 });

@@ -11,6 +11,7 @@ import { ErrorCode } from './constants/const.js'
 import { fail } from "./utils/response.js";
 import { resumeRoute } from "./routes/resume.js"
 import { jdRoute } from "./routes/jd.js";
+import { matchRoute } from "./routes/match.js";
 
 // 模型
 const AI_MODEL = process.env.MODEL || "deepseek-chat"
@@ -27,6 +28,7 @@ const chatSchema = z.object({
 // 路由：
 app.route("/", resumeRoute) // 解析路由
 app.route("/", jdRoute) // 解析路由
+app.route("/", matchRoute) // 解析jd
 
 app.get("/", (c) => {
   console.log('1234', process.env.PORT)
