@@ -22,4 +22,4 @@ export class AIservice {
     }
 }
 
-export const aiService = new AIservice()
+export const aiService = new AIservice();
