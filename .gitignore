@@ -32,9 +32,11 @@ dist/
 
 # uploads
 !uploads/.gitkeep
+uploads/*
 
 # test-files
 !test-files/.gitkeep
+test-files/*
 
 # history
 .history/
