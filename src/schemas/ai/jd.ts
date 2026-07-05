@@ -1,3 +1,4 @@
+// 校验AI返回的数据结构（Zod Schema）
 import { z } from 'zod'
 //  数据结构
 export const jdSchema = z.object({

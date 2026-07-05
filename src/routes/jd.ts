@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { aiClient } from "../utils/ai.js";
 import { success, fail } from "../utils/response.js";
-import { jdSchema } from "../schema/jd.js"
+import { jdSchema } from "../schemas/ai/jd.js"
 import { aiService } from "../service/ai.service.js";
 import { jdPrompt } from "../prompt/jd.prompt.js";
 import { parseJson } from "../utils/json.js";
