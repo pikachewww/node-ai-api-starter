@@ -2,6 +2,7 @@ import { Hono } from "hono";
 import { success, fail } from "../utils/response.js";
 import { resumeService } from "../service/resume.service.js";
 import { resumeListQuerySchema } from "../schemas/request/resume.schema.js"
+import { updateResumeSchema } from "../schemas/request/resume.schema.js"
 
 export const resumeRoute = new Hono();
 //  上传并解析简历
@@ -47,6 +48,11 @@ resumeRoute.delete("/resumes/:id", async (c) => {
   return success(c, result, "删除成功");
 });
 
+// 软删除
+resumeRoute.delete("", async (c) => {
+  
+})
+
 // 按照分页查询
 // curl "http://localhost:3000/resumesPage?page=1&pageSize=10"
 resumeRoute.get("/resumesPage", async (c) => {
@@ -65,3 +71,21 @@ resumeRoute.get("/resumesPage", async (c) => {
 //   "message":"[\n  {\n    \"expected\": \"number\",\n    \"code\": \"invalid_type\",\n    \"received\": \"NaN\",\n    \"path\": [\n      \"page\"\n    ],\n    \"message\": \"Invalid input: expected number, received NaN\"\n  }\n]",
 //   "data":null
 // }
+
+// 更新
+// curl -X PATCH http://localhost:3000/resumes/cmr7m0r2o0000c9p9tw4gz564 \
+//   -H "Content-Type: application/json" \
+//   -d '{"filename":"updated-test.pdf"}'
+resumeRoute.patch('/resumes/:id', async (c) => {
+  const id = c.req.param("id")
+  if(!id){
+    return fail(c, "id不能为空", 400)
+  }
+  const body = updateResumeSchema.parse(await c.req.json())
+
+  const result = await resumeService.updateResume(id, body)
+
+  return success(c, result, "更新成功")
+})
+
+

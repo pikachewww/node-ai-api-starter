@@ -15,8 +15,6 @@
 
 
 import { Hono } from "hono"
-import { z } from "zod"
-import { aiClient } from "../utils/ai.js"
 import { success, fail } from "../utils/response.js"
 import { matchSchema } from "../schemas/ai/match.js"
 import { aiService } from "../service/ai.service.js"

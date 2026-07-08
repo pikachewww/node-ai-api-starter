@@ -6,6 +6,8 @@ import { resumePrompt } from "../prompt/resume.prompt.js";
 import { parseJson } from "../utils/json.js";
 import { resumeRepository } from "../repositories/resume.repository.js";
 import { error } from "node:console";
+import type { InputJsonValue } from "@prisma/client/runtime/library";
+import type { Prisma } from "@prisma/client"
 
 export class ResumeService {
   // 解析简历
@@ -26,9 +28,9 @@ export class ResumeService {
 
     const raw = await aiService.chat(resumePrompt, text);
 
-    const parsed = parseJson(raw);
+    const parsed = parseJson<Prisma.InputJsonValue>(raw);
 
-    const savedResume = await resumeRepository.create({
+    const savedResume = await resumeRepository.createWithLog({
         filename: file.name,
         originalText: text,
         parsedJson: parsed
@@ -68,7 +70,18 @@ export class ResumeService {
       throw new Error("简历不存在")
     }
     
-    return resumeRepository.deleteById(id)
+    return resumeRepository.softDelete(id)
+  }
+
+  // 更新
+  async updateResume(id: string, data: Prisma.ResumeUpdateInput) {
+    const result = resumeRepository.findById(id)
+
+    if(!result) {
+      throw new Error("简历不存在")
+    }
+
+    return resumeRepository.update(id, data)
   }
 }
 
