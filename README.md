@@ -1,6 +1,6 @@
 # Node AI API Starter
 
-An AI Backend Starter built with Hono + TypeScript + DeepSeek.
+A production-style AI backend starter built with Hono, TypeScript, Prisma and PostgreSQL.
 
 ## Features
 
@@ -17,6 +17,34 @@ An AI Backend Starter built with Hono + TypeScript + DeepSeek.
 - Soft delete
 - Operation log transaction
 
+## Tech Stack
+
+- Hono
+
+- TypeScript
+
+- Prisma
+
+- PostgreSQL
+
+- Zod
+
+- Docker
+
+- OpenAI Compatible API
+
+## Project Structure
+
+src
+ ├── constants
+ ├── middleware
+ ├── prompt
+ ├── repositories
+ ├── routes
+ ├── schemas
+ ├── services
+ ├── utils
+
 ## API Examples
 
 ### Health Check
@@ -24,15 +52,6 @@ An AI Backend Starter built with Hono + TypeScript + DeepSeek.
 ```bash
 curl http://localhost:3000/health
 ```
-
-## Tech Stack
-
-- TypeScript
-- Hono
-- Zod
-- OpenAI SDK
-- pdf-parse
-- pnpm
 
 ## Quick Start
 
@@ -42,9 +61,15 @@ pnpm install
 cp .env.example .env
 
 pnpm dev
+
+Generate Prisma
+pnpm prisma generate
+
+Run Migration
+pnpm prisma migrate dev
 ```
 
-## API
+## API Examples
 
 | Method | API |
 | ------- | ---- |
@@ -78,11 +103,3 @@ curl -X PATCH http://localhost:3000/resumes/{id} \
 Soft Delete Resume
 curl -X DELETE http://localhost:3000/resumes/{id}
 ```
-
-## Roadmap
-
-- ✅ Resume Parser
-- ✅ JD Parser
-- 🚧 Match Score
-- 🚧 Resume Rewrite
-- 🚧 Cover Letter
